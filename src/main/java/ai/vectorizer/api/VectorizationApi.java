@@ -44,6 +44,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 
 import java.util.ArrayList;
@@ -88,6 +91,44 @@ public class VectorizationApi {
       body = "[no body]";
     }
     return operationId + " call failed with: " + statusCode + " - " + body;
+  }
+
+  private File saveResponseBodyToTempFile(HttpResponse<InputStream> response, String operationId) throws IOException {
+    String prefix = sanitizeTempFilePrefix(operationId);
+    String suffix = responseFileSuffix(response);
+    Path tempFile = Files.createTempFile("vectorizer-ai-" + prefix + "-", suffix);
+    try (InputStream input = response.body()) {
+      Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
+    }
+    return tempFile.toFile();
+  }
+
+  private String sanitizeTempFilePrefix(String value) {
+    String clean = value == null ? "" : value.replaceAll("[^A-Za-z0-9._-]", "-");
+    return clean.length() < 3 ? "api" : clean;
+  }
+
+  private String responseFileSuffix(HttpResponse<InputStream> response) {
+    String contentType = response.headers()
+        .firstValue("Content-Type")
+        .orElse("")
+        .split(";")[0]
+        .trim()
+        .toLowerCase();
+    switch (contentType) {
+      case "image/svg+xml":
+        return ".svg";
+      case "application/postscript":
+        return ".eps";
+      case "application/pdf":
+        return ".pdf";
+      case "application/dxf":
+        return ".dxf";
+      case "image/png":
+        return ".png";
+      default:
+        return ".tmp";
+    }
   }
 
   /**
@@ -451,7 +492,7 @@ public class VectorizationApi {
         return new ApiResponse<File>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<File>() {}) // closes the InputStream
+          localVarResponse.body() == null ? null : saveResponseBodyToTempFile(localVarResponse, "postDownload")
         );
       } finally {
       }
@@ -1305,7 +1346,7 @@ public class VectorizationApi {
         return new ApiResponse<File>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<File>() {}) // closes the InputStream
+          localVarResponse.body() == null ? null : saveResponseBodyToTempFile(localVarResponse, "postVectorize")
         );
       } finally {
       }
