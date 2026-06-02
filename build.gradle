@@ -24,6 +24,11 @@ apply plugin: 'maven-publish'
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 // Some text from the schema is copy pasted into the source files as UTF-8
 // but the default still seems to be to use platform encoding
 tasks.withType(JavaCompile).configureEach {
@@ -78,24 +83,6 @@ tasks.register('execute', JavaExec) {
     mainClass = System.getProperty('mainClass')
     classpath = sourceSets.main.runtimeClasspath
 }
-
-tasks.register('sourcesJar', Jar) {
-    dependsOn classes
-    archiveClassifier.set('sources')
-    from sourceSets.main.allSource
-}
-
-tasks.register('javadocJar', Jar) {
-    dependsOn javadoc
-    archiveClassifier.set('javadoc')
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives tasks.named('sourcesJar')
-    archives tasks.named('javadocJar')
-}
-
 
 ext {
     jackson_version = "2.14.1"
