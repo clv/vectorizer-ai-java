@@ -26,6 +26,7 @@ deploy:
       sonatype:
         active: RELEASE
         url: https://central.sonatype.com/api/v1/publisher
+        authorization: BEARER
         applyMavenCentralRules: true
         namespace: ai.vectorizer
         stagingRepositories:
