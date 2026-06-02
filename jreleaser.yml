@@ -16,6 +16,7 @@ project:
 signing:
   active: RELEASE
   pgp:
+    mode: FILE
     armored: true
     verify: false
 

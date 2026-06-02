@@ -35,14 +35,24 @@ jobs:
       - name: Stage Maven artifacts
         run: ./gradlew publishMavenPublicationToStagingRepository --no-daemon
 
+      - name: Prepare JReleaser signing keys
+        run: |
+          install -m 700 -d "$RUNNER_TEMP/jreleaser-gpg"
+          printf '%s' "$JRELEASER_GPG_PUBLIC_KEY_B64" | base64 -d > "$RUNNER_TEMP/jreleaser-gpg/public.asc"
+          printf '%s' "$JRELEASER_GPG_SECRET_KEY_B64" | base64 -d > "$RUNNER_TEMP/jreleaser-gpg/secret.asc"
+          chmod 600 "$RUNNER_TEMP/jreleaser-gpg/"*.asc
+        env:
+          JRELEASER_GPG_PUBLIC_KEY_B64: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY_B64 }}
+          JRELEASER_GPG_SECRET_KEY_B64: ${{ secrets.JRELEASER_GPG_SECRET_KEY_B64 }}
+
       - name: Publish to Maven Central
         uses: jreleaser/release-action@v2
         env:
           JRELEASER_GITHUB_TOKEN: ${{ github.token }}
           JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME: ${{ secrets.JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME }}
           JRELEASER_MAVENCENTRAL_SONATYPE_PASSWORD: ${{ secrets.JRELEASER_MAVENCENTRAL_SONATYPE_PASSWORD }}
-          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
-          JRELEASER_GPG_SECRET_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
+          JRELEASER_GPG_PUBLIC_KEY: ${{ runner.temp }}/jreleaser-gpg/public.asc
+          JRELEASER_GPG_SECRET_KEY: ${{ runner.temp }}/jreleaser-gpg/secret.asc
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
         with:
           arguments: deploy
