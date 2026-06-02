@@ -1,0 +1,15 @@
+# Publishing
+
+Maven coordinates: `ai.vectorizer:vectorizer-ai-java`
+
+Publishing uses Gradle to stage Maven artifacts and JReleaser to publish them to Maven Central through the Central Portal Publisher API.
+
+Configure Maven Central namespace ownership for `ai.vectorizer`, then add these GitHub Actions secrets:
+
+- `JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME`
+- `JRELEASER_MAVENCENTRAL_SONATYPE_PASSWORD`
+- `JRELEASER_GPG_PUBLIC_KEY`
+- `JRELEASER_GPG_SECRET_KEY`
+- `JRELEASER_GPG_PASSPHRASE`
+
+After that, push a SemVer tag such as `v1.0.0`. The workflow stages, signs, and deploys Maven artifacts, then creates a GitHub release.

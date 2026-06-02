@@ -36,10 +36,40 @@ tasks.withType(Javadoc).configureEach {
 }
 
 publishing {
+    repositories {
+        maven {
+            name = 'staging'
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+    }
     publications {
         maven(MavenPublication) {
             artifactId = 'vectorizer-ai-java'
             from components.java
+            pom {
+                name = 'vectorizer-ai-java'
+                description = 'Official Java SDK for the Vectorizer.AI image vectorization API.'
+                url = 'https://github.com/clv/vectorizer-ai-java'
+                licenses {
+                    license {
+                        name = 'Apache License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'Vectorizer.AI'
+                        email = 'support@vectorizer.ai'
+                        organization = 'Vectorizer.AI'
+                        organizationUrl = 'https://vectorizer.ai'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/clv/vectorizer-ai-java.git'
+                    developerConnection = 'scm:git:https://github.com/clv/vectorizer-ai-java.git'
+                    url = 'https://github.com/clv/vectorizer-ai-java'
+                }
+            }
         }
     }
 }

@@ -1,0 +1,23 @@
+project:
+  name: vectorizer-ai-java
+  description: Official Java SDK for the Vectorizer.AI image vectorization API.
+  longDescription: Official Java SDK for the Vectorizer.AI image vectorization API.
+  website: https://vectorizer.ai/api/documentation#sdks
+  authors:
+    - Vectorizer.AI
+  license: Apache-2.0
+  links:
+    homepage: https://vectorizer.ai/api/documentation#sdks
+
+signing:
+  active: RELEASE
+  armored: true
+
+deploy:
+  maven:
+    mavenCentral:
+      sonatype:
+        active: RELEASE
+        url: https://central.sonatype.com/api/v1/publisher
+        stagingRepositories:
+          - build/staging-deploy
