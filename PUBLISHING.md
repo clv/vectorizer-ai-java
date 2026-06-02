@@ -7,10 +7,11 @@ Publishing uses Gradle to stage Maven artifacts and JReleaser to publish them to
 Configure Maven Central namespace ownership for `ai.vectorizer`, then add these GitHub Actions secrets:
 
 - `JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME`
-- `JRELEASER_MAVENCENTRAL_SONATYPE_PASSWORD`
-- `JRELEASER_GPG_PUBLIC_KEY`
-- `JRELEASER_GPG_SECRET_KEY`
-- `JRELEASER_GPG_PASSPHRASE`
+- `JRELEASER_MAVENCENTRAL_SONATYPE_TOKEN`
+- `JRELEASER_GPG_PUBLIC_KEY_B64`
+- `JRELEASER_GPG_SECRET_KEY_B64`
+
+The Maven Central token secret is the base64 `username:password` value shown by the Central Portal user-token screen. JReleaser is configured for `BEARER` authorization against the Central Portal Publisher API.
 
 The Maven Central release signing key is:
 
