@@ -17,6 +17,7 @@ signing:
   active: RELEASE
   pgp:
     armored: true
+    verify: false
 
 deploy:
   maven:
