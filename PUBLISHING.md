@@ -15,7 +15,7 @@ Configure Maven Central namespace ownership for `ai.vectorizer`, then add these 
 The Maven Central release signing key is:
 
 - User ID: `Vectorizer.AI Release Signing <support@vectorizer.ai>`
-- Fingerprint: `FE76 CF68 4D9F D0A5 C7DC 9321 ABDB 18CE AC1F DC96`
+- Fingerprint: `D47C 22CE 7D1D C429 A342 C3B4 3680 D478 A4AB 2BCE`
 - Public keyserver: `hkps://keyserver.ubuntu.com`
 
 After that, update the generated package version, commit it, and push a matching SemVer tag such as `v1.0.0`. The workflow verifies that the tag matches `build.gradle`, stages, signs, and deploys Maven artifacts, then creates a GitHub release.
