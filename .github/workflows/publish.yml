@@ -23,6 +23,15 @@ jobs:
           java-version: "17"
           cache: gradle
 
+      - name: Verify tag version
+        run: |
+          tag_version="${GITHUB_REF_NAME#v}"
+          package_version="$(awk -F\"'\" '/^version = / { print $2; exit }' build.gradle)"
+          if [ "$package_version" != "$tag_version" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package version $package_version"
+            exit 1
+          fi
+
       - name: Stage Maven artifacts
         run: ./gradlew publishMavenPublicationToStagingRepository --no-daemon
 
