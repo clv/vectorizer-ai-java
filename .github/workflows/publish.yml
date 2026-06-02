@@ -58,6 +58,20 @@ jobs:
         with:
           arguments: deploy
 
+      - name: Show JReleaser trace on failure
+        if: failure()
+        run: |
+          if [ -f out/jreleaser/trace.log ]; then
+            sed -E \
+              -e 's/(Authorization: Basic )[A-Za-z0-9+\/=]+/\1***/g' \
+              -e 's/(Bearer )[A-Za-z0-9._-]+/\1***/g' \
+              -e 's/(password[=: ]+)[^[:space:]]+/\1***/Ig' \
+              -e 's/(username[=: ]+)[^[:space:]]+/\1***/Ig' \
+              out/jreleaser/trace.log
+          else
+            echo "No JReleaser trace log found."
+          fi
+
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
