@@ -5,7 +5,7 @@
     <artifactId>vectorizer-ai-java</artifactId>
     <packaging>jar</packaging>
     <name>vectorizer-ai-java</name>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <url>https://github.com/clv/vectorizer-ai-java</url>
     <description>Official Java SDK for the Vectorizer.AI image vectorization API.</description>
     <scm>
