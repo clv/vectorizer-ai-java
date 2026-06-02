@@ -38,8 +38,10 @@ jobs:
       - name: Prepare JReleaser signing keys
         run: |
           install -m 700 -d "$RUNNER_TEMP/jreleaser-gpg"
-          printf '%s' "$JRELEASER_GPG_PUBLIC_KEY_B64" | base64 -d > "$RUNNER_TEMP/jreleaser-gpg/public.asc"
-          printf '%s' "$JRELEASER_GPG_SECRET_KEY_B64" | base64 -d > "$RUNNER_TEMP/jreleaser-gpg/secret.asc"
+          printf '%s' "$JRELEASER_GPG_PUBLIC_KEY_B64" | base64 --decode --ignore-garbage > "$RUNNER_TEMP/jreleaser-gpg/public.asc"
+          printf '%s' "$JRELEASER_GPG_SECRET_KEY_B64" | base64 --decode --ignore-garbage > "$RUNNER_TEMP/jreleaser-gpg/secret.asc"
+          grep -q "BEGIN PGP PUBLIC KEY BLOCK" "$RUNNER_TEMP/jreleaser-gpg/public.asc"
+          grep -q "BEGIN PGP PRIVATE KEY BLOCK" "$RUNNER_TEMP/jreleaser-gpg/secret.asc"
           chmod 600 "$RUNNER_TEMP/jreleaser-gpg/"*.asc
         env:
           JRELEASER_GPG_PUBLIC_KEY_B64: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY_B64 }}
